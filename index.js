@@ -174,8 +174,11 @@ if(typeof Promise !== "undefined") Pooch.extend(Promise);
 // 		Pooch.thenIf( <cond>, <callback> ).then( ... )
 // All this does is create a method on the Pooch object
 // that returns a promise that *always* fulfills. It's
-// basically a noop that enables chaining.s
-Object.keys(Pooch.prototype).forEach(function(method) {
+// basically a noop that enables chaining.
+// 
+// We add "then" for a special case so Pooch.then( ... )
+// is legal.
+Object.keys(Pooch.prototype).concat(["then"]).forEach(function(method) {
 	Pooch[method] = function() {
 		return (new Pooch.Promise(function(resolve) { resolve(); }));
 	};

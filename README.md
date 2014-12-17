@@ -13,11 +13,20 @@ With Node v0.11.17, just a simple `require("pooch")` will give you the functiona
 
 	var Promise = require("bluebird"),
 		Pooch = require("pooch")(Promise);
-
+		
 
 ### Documentation
+Each of the functions below add to the `Promise` (or whatever implementation you use with `Pooch()`) prototype. Each function can also be chained from the root `Pooch` object (including `then`). So for example, using `thenIf`:
 
-#### `Promise#thenIgnore( <callback> )`
+```js
+Pooch.thenIf(function() { // All it does it return a no-op promise that is always fulfilled.
+	return true;
+}, function() {
+	return anotherPromise();
+}).then( ... );
+```
+
+#### `Promise#thenIgnore( Function handler )`
 Chain a new promise, fulfill it and ignore it's value. It works exactly like `Promise#then` except the value returned from the original promise is passed on instead of any value return from `Promise#thenIf`. An example probably illustrates it better.
 
 ```js
@@ -30,7 +39,7 @@ promiseReturns3().thenIgnore(function(value) {
 });
 ```
 
-#### `Promise#thenIf( <condition>, <callback> )`
+#### `Promise#thenIf( Function condition, Function handler )`
 Conditional promise execution if a synchronous `condition` (with the value passed from the previous promise) returns true. The `condition` callback recieves one parameter, the value from the previously executed promise. The `callback` is the same callback you would pass to `Promise#then`. 
 
 **NOTE:** Any value returned from the conditional promise is ignored. If the conditional promise is executed, it just holds up the promise execution chain and waits until it's complete. It has no affect on the ensuing values so any proceeding `Promise#then` calls receive the value from the promise the `Promise#thenIf` is attached to effectively skipping the conditional promise. See `Promise#thenIgnore`.
@@ -46,7 +55,7 @@ getUser().thenIf(function(user) {
 });
 ```
 
-#### `Promise#thenWhile( <condition>, <callback> )`
+#### `Promise#thenWhile( Function condition, Function callback )`
 Execute a promise while a condition is true. The `condition` callback recieves one parameter, the value from the previously executed promise. The `callback` is the same callback you would pass to `Promise#then`. 
 
 ```js

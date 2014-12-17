@@ -23,7 +23,7 @@ describe("Pooch", function () {
 	});
 
 	it("should have all methods within the prototype accessible statically for chaining.", function() {
-		assert(Object.keys(Pooch.prototype).every(function(method) {
+		assert(Object.keys(Pooch.prototype).concat(["then"]).every(function(method) {
 			return !!Pooch[method];
 		}));
 	});
