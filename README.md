@@ -13,7 +13,11 @@ With Node v0.11.17, just a simple `require("pooch")` will give you the functiona
 
 	var Promise = require("bluebird"),
 		Pooch = require("pooch")(Promise);
-		
+
+### API
+- [`Promise#thenIgnore( Function handler )`](#promisethenignore-function-handler-)
+- [`Promise#thenIf( Function condition, Function handler )`](#promisethenif-function-condition-function-handler-)
+- [`Promise#thenWhile( Function condition, Function callback )`](#promisethenwhile-function-condition-function-callback-)
 
 ### Documentation
 Each of the functions below add to the `Promise` (or whatever implementation you use with `Pooch()`) prototype. Each function can also be chained from the root `Pooch` object (including `then`). So for example, using `thenIf`:
