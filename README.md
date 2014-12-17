@@ -6,6 +6,14 @@ Install with npm
 
 	$ npm install --save pooch
 	
+### Usage
+Pooch works with all Promises that follow the ES6 Promise spec. To use on external libraries such as [bluebird](https://github.com/petkaantonov/bluebird/), just call `pooch` on the Promise object. You will only need to do this once since `require` caches objects.
+
+With Node v0.11.17, just a simple `require("pooch")` will give you the functionality with native promises. Otherwise, you can extend an existing library:
+
+	var Promise = require("bluebird"),
+		Pooch = require("pooch")(Promise);
+
 
 ### Documentation
 

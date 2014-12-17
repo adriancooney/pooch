@@ -1,5 +1,27 @@
-var psync = require("../index.js"),
+var Pooch = require("../index.js"),
 	assert = require("assert");
+
+describe("Pooch", function () {
+	it("should throw an error instantiating Pooch", function() {
+		assert.throws(function() {
+			new Pooch;
+		}, "Pooch throwing an error when instantiating directly.");
+	});
+
+	it("should extend the prototype of a function", function () {
+		var f = function() {};
+
+		Pooch.extend(f);
+
+		assert(f.prototype.thenIf, "Extended function has function from Pooch.");
+	});
+
+	it("should be extended onto the native promises, if any", function() {
+		if(typeof Promise !== "undefined") {
+			assert(Promise.prototype.thenIf, "Function has been extended onto native promises.");
+		}
+	});
+});
 
 describe("Promise", function () {
 	describe("#thenIf", function () {
