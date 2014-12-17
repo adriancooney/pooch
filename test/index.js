@@ -21,9 +21,48 @@ describe("Pooch", function () {
 			assert(Promise.prototype.thenIf, "Function has been extended onto native promises.");
 		}
 	});
+
+	it("should have all methods within the prototype accessible statically for chaining.", function() {
+		assert(Object.keys(Pooch.prototype).every(function(method) {
+			return !!Pooch[method];
+		}));
+	});
+
+	it("should enable chaining from the pooch object", function(done) {
+		Pooch.thenIf(function() {
+			return true;
+		}, function() {
+			return val(1);
+		}).then(function() {
+			return val(2)
+		}).then(done.bind(null, null)).catch(done);
+	});
 });
 
 describe("Promise", function () {
+	describe("#thenIgnore", function () {
+		it("should ignore the value of the second promise", function (done) {
+			val(1).thenIgnore(function(value) {
+				assert.equal(value, 1, "The value within the #thenIgnore fullfillment handler is 1.");
+				return val(2);
+			}).then(function(value) {
+				assert.equal(value, 1, "The value within the ensuing #then fullfillment handler is 1 (unchanged).");
+			}).then(done.bind(null, null)).catch(done);
+		});
+
+		it("should throw an error if incorrect arguments are given", function() {
+			assert.throws(function() {
+				val().thenIgnore(true);
+			});
+		});
+
+		it("should throw an error if no arguments are given", function() {
+			assert.throws(function() {
+				val().thenIgnore();
+			});
+		});
+	});
+
 	describe("#thenIf", function () {
 		it("should conditionally execute a promise if a callback returns true.", function(done) {
 			val(1).thenIf(function(value) {
@@ -40,7 +79,7 @@ describe("Promise", function () {
 			val(1).thenIf(function(value) {
 				return false;
 			}, function(value) {
-				done("Condition executed when it should not have been.");
+				done(new Error("Condition executed when it should not have been."));
 			}).then(function(value) {
 				assert.equal(value, 1, "Conditional promise has not changed value.");
 			}).then(done).catch(done);
@@ -69,6 +108,31 @@ describe("Promise", function () {
 			assert.throws(function() {
 				val().thenIf();
 			}, "#thenIf is passed no arguments.");
+		});
+	});
+
+
+	describe("#thenWhile", function () {
+		it("should fulfill a promise while a condition returns true", function (done) {
+			var calls = 0;
+			val({ x: 1, foo: "bar" }).thenWhile(function(val) {
+				return val.x <= 10;
+			}, function(value) {
+				calls++;
+				value.x = value.x + 1;
+				return val(2);
+			}).then(function(value) {
+				assert(value.foo === "bar", "The ensuing promise's value is that from the previous promise.");
+				assert.equal(calls, 10, "The Promise#then has been called 10 times.");
+			}).then(done.bind(null, null)).catch(done);
+		});
+
+		it("should not fulfull a promise when a condition is false", function(done) {
+			val().thenWhile(function() {
+				return false;
+			}, function() {
+				done(new Error("Promise was fullfilled when condition is false."));
+			}).then(done).catch(done);
 		});
 	});
 });		
