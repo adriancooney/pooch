@@ -1,0 +1,31 @@
+{
+  "name": "pooch",
+  "version": "0.1.0",
+  "description": "Promise flow control similiar to async.",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/adriancooney/pooch.git"
+  },
+  "keywords": [
+    "pooch",
+    "promise",
+    "flow",
+    "control"
+  ],
+  "author": "Adrian Cooney <cooney.adrian@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adriancooney/pooch/issues"
+  },
+  "homepage": "https://github.com/adriancooney/pooch",
+  "devDependencies": {
+    "mocha": "^2.0.1"
+  }
+}
